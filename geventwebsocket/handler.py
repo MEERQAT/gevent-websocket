@@ -1,8 +1,13 @@
 import base64
 import hashlib
 
+from ._compat import PY3, gevent_pywsgi_write
 from gevent.pywsgi import WSGIHandler
-from ._compat import PY3
+
+# Monkey-patch the `write` method to preclude unicode strings from being concatenated
+# with bytes.
+WSGIHandler.write = gevent_pywsgi_write
+
 from .websocket import WebSocket, Stream
 from .logging import create_logger
 
@@ -13,6 +18,7 @@ class Client(object):
         self.ws = ws
 
 
+# noinspection PyIncorrectDocstring,PyIncorrectDocstring,PyIncorrectDocstring,LongLine,LongLine,LongLine,PyPep8,PyPep8,PyPep8
 class WebSocketHandler(WSGIHandler):
     """
     Automatically upgrades the connection to a websocket.
@@ -63,6 +69,7 @@ class WebSocketHandler(WSGIHandler):
             self.websocket = None
 
     def run_application(self):
+        # noinspection PyRedundantParentheses
         if (hasattr(self.server, 'pre_start_hook') and self.server.pre_start_hook):
             self.logger.debug("Calling pre-start hook")
             if self.server.pre_start_hook(self):
@@ -73,7 +80,7 @@ class WebSocketHandler(WSGIHandler):
 
         if hasattr(self, 'websocket'):
             if self.status and not self.headers_sent:
-                self.write('')
+                self.write(b'')
 
             self.run_websocket()
         else:
@@ -136,6 +143,7 @@ class WebSocketHandler(WSGIHandler):
 
             return ['No Websocket protocol version defined']
 
+    # noinspection PyUnresolvedReferences,PyUnresolvedReferences,PyUnresolvedReferences
     def upgrade_connection(self):
         """
         Validate and 'upgrade' the HTTP request to a WebSocket request.

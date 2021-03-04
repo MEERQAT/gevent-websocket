@@ -1,17 +1,19 @@
-VERSION = (0, 10, 1, 'final', 0)
+VERSION = (0, 11, 0, 'final', 0)
 
 __all__ = [
     'WebSocketApplication',
     'Resource',
     'WebSocketServer',
     'WebSocketError',
-    'get_version'
+    'get_version',
+    'VERSION',
 ]
 
 
 def get_version(*args, **kwargs):
     from .utils import get_version
     return get_version(*args, **kwargs)
+
 
 try:
     from .resource import WebSocketApplication, Resource

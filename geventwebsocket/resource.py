@@ -54,13 +54,14 @@ class Resource(object):
                               "app list is discouraged and may lead to "
                               "undefined behavior.", UserWarning)
 
-            self.apps = apps.items()
+            self.apps = list(apps.items())
 
     # An app can either be a standard WSGI application (an object we call with
     # __call__(self, environ, start_response)) or a class we instantiate
     # (and which can handle websockets). This function tells them apart.
     # Override this if you have apps that can handle websockets but don't
     # fulfill these criteria.
+    # noinspection PyMethodMayBeStatic
     def _is_websocket_app(self, app):
         return isinstance(app, type) and issubclass(app, WebSocketApplication)
 
